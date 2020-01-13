@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>3D CS LOGO WITH THREE.JS</title>
+</head>
+<body>
+    <style>
+        body {
+            margin: 0px;
+        }
+    </style>
+    <canvas id="myCanvas"></canvas>
+    <style>
+        #myCanvas {
+            background-image: url("../models/space.jpg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover; 
+        }      
+    </style>
+    <script src="../js/three.js"></script>
+    <script src="../js/GLTFLoader.js"></script>
+    <script src="../js/OrbitControls.js"></script>
+
+    <script>
+        // Grab our canvas element
+        myCanvas = document.getElementById('myCanvas');
+      
+        // Set height and width to the size of our browser window
+        let WIDTH = window.innerWidth,
+            HEIGHT = window.innerHeight;
+      
+        // RENDERER
+        // Create a new renderer and attach it to our canvas element
+        // Set antialiasing to true and alpha (transparency) buffer to true
+        // Set the size equal to our window.
+        let renderer = new THREE.WebGLRenderer({
+            canvas: myCanvas, 
+            antialias: true,
+            alpha: true
+        });
+        renderer.setSize(WIDTH, HEIGHT);
+
+        // SCENE
+        // Create a new Three scene
+        let scene = new THREE.Scene();
+      
+        // CAMERA
+        // Create a camera, zoom it out from the model a bit, and add it to the scene.
+        // Params are vertical field of view, aspect ratio, near plane, and far plane.
+        let camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 0.1, 2000);
+        camera.position.set(0,2,20);
+        scene.add(camera);
+
+        // LIGHT
+        // Create a source of white light at half intensity and add to scene
+        let color = 0xFFFFFF;
+        let intensity = 0.8;
+        let light = new THREE.DirectionalLight(color, intensity);
+        light.position.set(100, 50, 100);
+        light.target.position.set(0, 0, 0);
+        scene.add(light);
+        scene.add(light.target);
+
+        // CUBE
+        // Create a cube using Three's built in BoxGeometry
+        // Apply a colored mesh around the cube and add cube to scene
+        // let geometry = new THREE.BoxGeometry(1, 1, 1);
+        // let material = new THREE.MeshLambertMaterial({color: 0x0000ff});
+        // let cube = new THREE.Mesh(geometry, material);
+        // scene.add(cube);
+        // cube.position.z = -2.5;
+        // cube.position.y = 6;
+        // cube.position.x = 0;
+
+        // LOADING 3D MODEL
+        // Assigning logoMesh to the gltf scene, then adding it to the scene
+        // We will use the scope of logoMesh to be able to rotate it in animate
+        let loader = new THREE.GLTFLoader();
+        loader.load('../models/cslogo.glb', handle_load);
+        let logoMesh;
+        function handle_load(gltf) {
+            logoMesh = gltf.scene;
+            scene.add(logoMesh);
+        }
+
+        // Use OrbitControls to control camera view via mouse
+        let controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+        function animate () {
+            // Render the scene with camera information
+            renderer.render(scene, camera);
+
+            // Rotate our cube
+            if (logoMesh) {
+                logoMesh.rotation.x += 0.02
+                logoMesh.rotation.y += 0.01
+                logoMesh.rotation.z += 0.01
+            }
+
+            controls.update();
+            
+            // Get new information and rerender at 60fps
+            requestAnimationFrame(animate);
+        }
+
+        // Start the animation loop
+        animate();
+
+    </script>
+</body>
+</html>
