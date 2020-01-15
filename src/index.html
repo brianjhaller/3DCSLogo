@@ -52,8 +52,8 @@
         // CAMERA
         // Create a camera, zoom it out from the model a bit, and add it to the scene.
         // Params are vertical field of view, aspect ratio, near plane, and far plane.
-        const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 2000);
-        camera.position.set(0,2,20);
+        const camera = new THREE.PerspectiveCamera(45, width / height, 10, 2000);
+        camera.position.set(0,2,100);
         scene.add(camera);
 
         // LIGHT
@@ -66,16 +66,36 @@
         scene.add(light);
         scene.add(light.target);
 
+        // RANDOM HEX COLOR GENERATOR
+        // Makes a #000000 hex code on invocation
+        // function getRandomColor() {
+        //     const chars = '0123456789ABCDEF';
+        //     let hex = '#';
+        //     for (let i = 0; i < 6; i++) {
+        //         hex += chars[Math.floor(Math.random() * 16)];
+        //     }
+        //     return hex;
+        // }
+
         // CUBE
         // Create a cube using Three's built in BoxGeometry
         // Apply a colored mesh around the cube and add cube to scene
-        // let geometry = new THREE.BoxGeometry(1, 1, 1);
-        // let material = new THREE.MeshLambertMaterial({color: 0x0000ff});
-        // let cube = new THREE.Mesh(geometry, material);
-        // scene.add(cube);
-        // cube.position.z = -2.5;
-        // cube.position.y = 6;
-        // cube.position.x = 0;
+        // const group = new THREE.Group();
+        // const arrayCube = []
+        // for (let i = 0; i < 50; i += 1) {
+        //     let randColor = "000000".replace(/0/g,function(){ return (~~(Math.random()*16)).toString(16) });
+        //     randColor = getRandomColor();
+        //     const size = Math.floor(Math.random() * 8) + 1
+        //     const geometry = new THREE.BoxGeometry(size, size, size);
+        //     const material = new THREE.MeshLambertMaterial({color: randColor});
+        //     const cube = new THREE.Mesh(geometry, material);
+        //     group.add(cube);
+        //     arrayCube.push(cube)
+        //     cube.position.z = Math.floor(Math.random() * 200);
+        //     cube.position.y = Math.floor(Math.random() * (height / 10) - Math.random() * (height / 10));
+        //     cube.position.x = Math.floor(Math.random() * (width / 10) - Math.random() * (width / 10));
+        // }
+        // scene.add(group)
 
         // LOADING 3D MODEL
         // Assigning logoMesh to the gltf scene, then adding it to the scene
@@ -107,6 +127,14 @@
             renderer.render(scene, camera);
 
             // Rotate our cube
+            // arrayCube.map(cube => {
+            //     cube.rotation.x += Math.random() / 80;
+            //     cube.rotation.y += Math.random() / 80;
+            //     cube.position.x += (Math.random() / 50 - Math.random() / 50);
+            //     cube.position.y += (Math.random() / 50 - Math.random() / 50);
+            // });
+
+            // Rotate our logo
             if (logoMesh) {
                 logoMesh.rotation.x += 0.02
                 logoMesh.rotation.y += 0.01
