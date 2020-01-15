@@ -16,6 +16,7 @@
     <style>
         #myCanvas {
             background-image: url("../models/space.jpg");
+            background-color: lightblue;
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover; 
@@ -30,36 +31,36 @@
         myCanvas = document.getElementById('myCanvas');
       
         // Set height and width to the size of our browser window
-        let WIDTH = window.innerWidth,
-            HEIGHT = window.innerHeight;
+        let width = window.innerWidth,
+            height = window.innerHeight;
       
         // RENDERER
         // Create a new renderer and attach it to our canvas element
         // Set antialiasing to true and alpha (transparency) buffer to true
         // Set the size equal to our window.
-        let renderer = new THREE.WebGLRenderer({
+        const renderer = new THREE.WebGLRenderer({
             canvas: myCanvas, 
             antialias: true,
             alpha: true
         });
-        renderer.setSize(WIDTH, HEIGHT);
+        renderer.setSize(width, height);
 
         // SCENE
         // Create a new Three scene
-        let scene = new THREE.Scene();
+        const scene = new THREE.Scene();
       
         // CAMERA
         // Create a camera, zoom it out from the model a bit, and add it to the scene.
         // Params are vertical field of view, aspect ratio, near plane, and far plane.
-        let camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 0.1, 2000);
+        const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 2000);
         camera.position.set(0,2,20);
         scene.add(camera);
 
         // LIGHT
         // Create a source of white light at half intensity and add to scene
-        let color = 0xFFFFFF;
-        let intensity = 0.8;
-        let light = new THREE.DirectionalLight(color, intensity);
+        const color = 0xFFFFFF;
+        const intensity = 0.8;
+        const light = new THREE.DirectionalLight(color, intensity);
         light.position.set(100, 50, 100);
         light.target.position.set(0, 0, 0);
         scene.add(light);
@@ -79,7 +80,7 @@
         // LOADING 3D MODEL
         // Assigning logoMesh to the gltf scene, then adding it to the scene
         // We will use the scope of logoMesh to be able to rotate it in animate
-        let loader = new THREE.GLTFLoader();
+        const loader = new THREE.GLTFLoader();
         loader.load('../models/cslogo.glb', handle_load);
         let logoMesh;
         function handle_load(gltf) {
@@ -87,8 +88,19 @@
             scene.add(logoMesh);
         }
 
+        // RESIZE LISTENER
+        // This is listening for any window resizing and will reset the aspect ratio of the render
+        // and updates camera aspect ratio as well so logo is always in center of browser window.
+        window.addEventListener('resize', function() {
+            width = window.innerWidth,
+            height = window.innerHeight;
+            renderer.setSize(width, height);
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+        });
+
         // Use OrbitControls to control camera view via mouse
-        let controls = new THREE.OrbitControls(camera, renderer.domElement);
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
         function animate () {
             // Render the scene with camera information
