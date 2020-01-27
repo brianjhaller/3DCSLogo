@@ -11,4 +11,4 @@ Because the code is all contained in a single HTML file, clone this repo to your
 Happy coding!
 
 #### Link to Article:
-www.codesmith.io/blog
+https://codesmith.io/blog/3d-logo-with-threejs
