@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>3D CS LOGO WITH THREE.JS</title>
+</head>
+<body>
+    <style>
+        body {
+            margin: 0px;
+        }
+    </style>
+    <canvas id="myCanvas"></canvas>
+    <style>
+        #myCanvas {
+            background-color: lightblue;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover; 
+        }      
+    </style>
+    <script src="../../js/three.js"></script>
+    <script src="../../js/GLTFLoader.js"></script>
+    <script src="../../js/OrbitControls.js"></script>
+
+    <script>
+        // Grab our canvas element
+        myCanvas = document.getElementById('myCanvas');
+      
+        // Set height and width to the size of our browser window
+        let width = window.innerWidth,
+            height = window.innerHeight;
+      
+        // RENDERER
+        // Create a new renderer and attach it to our canvas element
+        // Set antialiasing to true and alpha (transparency) buffer to true
+        // Set the size equal to our window.
+        const renderer = new THREE.WebGLRenderer({
+            canvas: myCanvas, 
+            antialias: true,
+            alpha: true
+        });
+        renderer.setSize(width, height);
+
+        // SCENE
+        // Create a new Three scene
+        const scene = new THREE.Scene();
+      
+        // CAMERA
+        // Create a camera, zoom it out from the model a bit, and add it to the scene.
+        // Params are vertical field of view, aspect ratio, near plane, and far plane.
+        const camera = new THREE.PerspectiveCamera(45, width / height, 10, 2000);
+        camera.position.set(120,2,100);
+        scene.add(camera);
+
+        // LIGHT
+        // Create a source of white light at half intensity and add to scene
+        const color = 0xFFFFFF;
+        const intensity = 0.8;
+        const light = new THREE.DirectionalLight(color, intensity);
+        light.position.set(100, 50, 100);
+        light.target.position.set(0, 0, 0);
+        scene.add(light);
+        scene.add(light.target);
+
+        var geometry = new THREE.SphereGeometry(100, 20, 20);
+        var texture = new THREE.TextureLoader().load('../models/codesmith.jpg');
+        var material = new THREE.MeshBasicMaterial( { map: texture } );
+        var mesh = new THREE.Mesh( geometry, material );
+		mesh.scale.x =1;
+        scene.add( mesh );
+
+        // RESIZE LISTENER
+        // This is listening for any window resizing and will reset the aspect ratio of the render
+        // and updates camera aspect ratio as well so logo is always in center of browser window.
+        window.addEventListener('resize', function() {
+            width = window.innerWidth,
+            height = window.innerHeight;
+            renderer.setSize(width, height);
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+        });
+
+        // Use OrbitControls to control camera view via mouse
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+        function animate () {
+            // Render the scene with camera information
+            renderer.render(scene, camera);
+            controls.update();
+            
+            // Get new information and rerender at 60fps
+            requestAnimationFrame(animate);
+        }
+
+        // Start the animation loop
+        animate();
+
+    </script>
+</body>
+</html>
